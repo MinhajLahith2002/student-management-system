@@ -17,7 +17,7 @@ const studentSchema = z.object({
   email: z.string().email('Invalid email address'),
   phoneNumber: z.string().min(10, 'Phone number must be at least 10 digits'),
   course: z.string().min(2, 'Course is required'),
-  age: z.coerce.number().min(16, 'Age must be at least 16').max(100, 'Invalid age'),
+  age: z.number().min(16, 'Age must be at least 16').max(100, 'Invalid age'),
   gender: z.string().min(1, 'Gender is required'),
   address: z.string().min(5, 'Address is required'),
   registrationDate: z.string().min(1, 'Registration date is required'),
@@ -105,7 +105,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({ initialData, isEditMod
             type="number"
             placeholder="e.g. 20"
             icon={<FiUser size={18} />}
-            {...register('age')}
+            {...register('age', { valueAsNumber: true })}
             error={errors.age?.message}
           />
           <div className="w-full flex flex-col gap-1.5">

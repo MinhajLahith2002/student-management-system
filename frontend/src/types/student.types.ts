@@ -19,5 +19,5 @@ export interface StudentFormData {
   age: number;
   gender: string;
   address: string;
-  registrationDate?: string;
+  registrationDate: string;
 }
