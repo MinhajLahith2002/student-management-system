@@ -21,15 +21,7 @@
   --border: #e2e8f0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #09090b;
-    --foreground: #fafafa;
-    --card: #18181b;
-    --card-foreground: #fafafa;
-    --border: #27272a;
-  }
-}
+@custom-variant dark (&:is(.dark *));
 
 body {
   background-color: var(--background);
@@ -40,7 +32,7 @@ body {
 }
 
 /* Premium UI Utilities */
-@layer utilities {
+@layer components {
   .glass-panel {
     @apply bg-white/70 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-xl;
   }

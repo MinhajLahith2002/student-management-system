@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { FiX } from 'react-icons/fi';
 
 interface ModalProps {
@@ -11,6 +12,12 @@ interface ModalProps {
 }
 
 export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -22,17 +29,17 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-0">
       <div 
         className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" 
         onClick={onClose}
       />
       
       <div className="relative glass-panel rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="flex items-center justify-between p-6 border-b border-border">
+        <div className="flex items-center justify-between p-6 border-b border-border/50">
           <h3 className="text-xl font-semibold">{title}</h3>
           <button 
             onClick={onClose}
@@ -46,6 +53,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
           {children}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

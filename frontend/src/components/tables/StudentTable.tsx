@@ -17,6 +17,8 @@ export const StudentTable: React.FC<StudentTableProps> = ({ students, onDelete, 
   const router = useRouter();
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
+  const [viewStudent, setViewStudent] = useState<Student | null>(null);
+
   const handleDeleteConfirm = () => {
     if (deleteId) {
       onDelete(deleteId);
@@ -84,7 +86,14 @@ export const StudentTable: React.FC<StudentTableProps> = ({ students, onDelete, 
                   </div>
                 </td>
                 <td className="px-6 py-4 text-right">
-                  <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center justify-end gap-2">
+                    <button 
+                      onClick={() => setViewStudent(student)}
+                      className="p-2 rounded-lg hover:bg-emerald-50 hover:text-emerald-600 dark:hover:bg-emerald-900/30 dark:hover:text-emerald-400 text-slate-400 transition-colors"
+                      title="View Details"
+                    >
+                      <FiEye size={18} />
+                    </button>
                     <button 
                       onClick={() => router.push(`/students/edit/${student.id}`)}
                       className="p-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 text-slate-400 transition-colors"
@@ -128,6 +137,64 @@ export const StudentTable: React.FC<StudentTableProps> = ({ students, onDelete, 
             <Button variant="danger" onClick={handleDeleteConfirm}>Delete Student</Button>
           </div>
         </div>
+      </Modal>
+
+      <Modal
+        isOpen={!!viewStudent}
+        onClose={() => setViewStudent(null)}
+        title="Student Details"
+      >
+        {viewStudent && (
+          <div className="space-y-4 text-sm text-slate-700 dark:text-slate-300">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Student ID</span>
+                <span className="font-medium bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded inline-block">{viewStudent.studentId}</span>
+              </div>
+              <div>
+                <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Registration Date</span>
+                <span>{new Date(viewStudent.registrationDate).toLocaleDateString()}</span>
+              </div>
+              
+              <div className="col-span-2 pt-2">
+                <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Full Name</span>
+                <span className="text-base font-medium">{viewStudent.fullName}</span>
+              </div>
+              
+              <div>
+                <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Email Address</span>
+                <span>{viewStudent.email}</span>
+              </div>
+              <div>
+                <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Phone Number</span>
+                <span>{viewStudent.phoneNumber}</span>
+              </div>
+              
+              <div>
+                <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Course</span>
+                <span>{viewStudent.course}</span>
+              </div>
+              <div className="flex gap-8">
+                <div>
+                  <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Age</span>
+                  <span>{viewStudent.age}</span>
+                </div>
+                <div>
+                  <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Gender</span>
+                  <span className="capitalize">{viewStudent.gender}</span>
+                </div>
+              </div>
+
+              <div className="col-span-2 pt-2">
+                <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Address</span>
+                <span className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg block border border-border/50">{viewStudent.address}</span>
+              </div>
+            </div>
+            <div className="flex justify-end pt-4 mt-2">
+              <Button onClick={() => setViewStudent(null)}>Close</Button>
+            </div>
+          </div>
+        )}
       </Modal>
     </>
   );

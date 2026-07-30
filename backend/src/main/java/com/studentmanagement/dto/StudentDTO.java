@@ -4,9 +4,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import java.util.Date;
 
 @Data
 public class StudentDTO {
+
+    @NotBlank(message = "Student ID is required")
+    private String studentId;
 
     @NotBlank(message = "Full name is required")
     private String fullName;
@@ -29,4 +33,7 @@ public class StudentDTO {
 
     @NotBlank(message = "Address is required")
     private String address;
+
+    @NotNull(message = "Registration date is required")
+    private Date registrationDate;
 }
