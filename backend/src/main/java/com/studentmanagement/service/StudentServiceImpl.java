@@ -20,7 +20,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student createStudent(StudentDTO studentDTO) {
         Student student = Student.builder()
-                .studentId(studentDTO.getStudentId())
+                .studentId("STU-" + java.util.UUID.randomUUID().toString().substring(0, 6).toUpperCase())
                 .fullName(studentDTO.getFullName())
                 .email(studentDTO.getEmail())
                 .phoneNumber(studentDTO.getPhoneNumber())
@@ -48,7 +48,6 @@ public class StudentServiceImpl implements StudentService {
     public Student updateStudent(String id, StudentDTO studentDTO) {
         Student existingStudent = getStudentById(id);
         
-        existingStudent.setStudentId(studentDTO.getStudentId());
         existingStudent.setFullName(studentDTO.getFullName());
         existingStudent.setEmail(studentDTO.getEmail());
         existingStudent.setPhoneNumber(studentDTO.getPhoneNumber());

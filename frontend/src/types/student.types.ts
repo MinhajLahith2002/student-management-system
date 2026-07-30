@@ -12,7 +12,6 @@ export interface Student {
 }
 
 export interface StudentFormData {
-  studentId: string;
   fullName: string;
   email: string;
   phoneNumber: string;

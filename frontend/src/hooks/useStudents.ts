@@ -50,11 +50,23 @@ export const useStudents = (initialFetch = true) => {
     }
   };
 
+  const bulkDeleteStudents = async (ids: string[]) => {
+    try {
+      // Execute all deletions concurrently
+      await Promise.all(ids.map(id => studentService.deleteStudent(id)));
+      // Filter out all deleted ids
+      setStudents(students.filter(s => !ids.includes(s.id)));
+      toast.success(`${ids.length} students deleted successfully`);
+    } catch (err: any) {
+      toast.error('Failed to delete some students');
+    }
+  };
+
   useEffect(() => {
     if (initialFetch) {
       fetchStudents();
     }
   }, [fetchStudents, initialFetch]);
 
-  return { students, loading, error, fetchStudents, searchStudents, deleteStudent };
+  return { students, loading, error, fetchStudents, searchStudents, deleteStudent, bulkDeleteStudents };
 };
