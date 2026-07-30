@@ -4,8 +4,9 @@ import React, { useState, useMemo } from 'react';
 import { Student } from '@/types/student.types';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
-import { FiEdit2, FiTrash2, FiEye, FiUsers, FiChevronUp, FiChevronDown, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiEye, FiUsers, FiChevronUp, FiChevronDown, FiChevronLeft, FiChevronRight, FiCopy } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 interface StudentTableProps {
   students: Student[];
@@ -332,56 +333,85 @@ export const StudentTable: React.FC<StudentTableProps> = ({ students, onDelete, 
       <Modal
         isOpen={!!viewStudent}
         onClose={() => setViewStudent(null)}
-        title="Student Details"
+        title="" // Hide default title
       >
         {viewStudent && (
-          <div className="space-y-4 text-sm text-slate-700 dark:text-slate-300">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Student ID</span>
-                <span className="font-medium bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded inline-block">{viewStudent.studentId}</span>
+          <div className="flex flex-col">
+            {/* Header section with avatar */}
+            <div className="flex flex-col items-center justify-center pb-6 border-b border-border/50">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/10 flex items-center justify-center text-primary text-3xl font-bold shadow-sm mb-4">
+                {viewStudent.fullName.charAt(0).toUpperCase()}
               </div>
-              <div>
-                <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Registration Date</span>
-                <span>{new Date(viewStudent.registrationDate).toLocaleDateString()}</span>
+              <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">{viewStudent.fullName}</h2>
+              <div className="flex items-center mt-1">
+                <span className="text-sm text-slate-500 font-medium">ID: {viewStudent.studentId}</span>
+                <button 
+                  onClick={() => {
+                    navigator.clipboard.writeText(viewStudent.studentId);
+                    toast.success('Student ID copied to clipboard!');
+                  }}
+                  className="ml-2 p-1 text-slate-400 hover:text-primary transition-colors"
+                  title="Copy ID"
+                >
+                  <FiCopy size={14} />
+                </button>
               </div>
-              
-              <div className="col-span-2 pt-2">
-                <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Full Name</span>
-                <span className="text-base font-medium">{viewStudent.fullName}</span>
-              </div>
-              
-              <div>
-                <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Email Address</span>
-                <span>{viewStudent.email}</span>
-              </div>
-              <div>
-                <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Phone Number</span>
-                <span>{viewStudent.phoneNumber}</span>
-              </div>
-              
-              <div>
-                <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Course</span>
-                <span>{viewStudent.course}</span>
-              </div>
-              <div className="flex gap-8">
+            </div>
+
+            {/* Details section */}
+            <div className="space-y-5 pt-6 text-sm text-slate-700 dark:text-slate-300">
+              <div className="grid grid-cols-2 gap-y-5 gap-x-4">
                 <div>
-                  <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Age</span>
-                  <span>{viewStudent.age}</span>
+                  <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Email Address</span>
+                  <a href={`mailto:${viewStudent.email}`} className="text-primary hover:underline transition-all">
+                    {viewStudent.email}
+                  </a>
                 </div>
                 <div>
-                  <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Gender</span>
-                  <span className="capitalize">{viewStudent.gender}</span>
+                  <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Phone Number</span>
+                  <a href={`tel:${viewStudent.phoneNumber}`} className="text-primary hover:underline transition-all">
+                    {viewStudent.phoneNumber}
+                  </a>
+                </div>
+                
+                <div>
+                  <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Course</span>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-100 dark:border-blue-800">
+                    {viewStudent.course}
+                  </span>
+                </div>
+                <div>
+                  <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Registration Date</span>
+                  <span className="font-medium text-slate-800 dark:text-slate-200">{new Date(viewStudent.registrationDate).toLocaleDateString()}</span>
+                </div>
+
+                <div>
+                  <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Age</span>
+                  <span className="font-medium text-slate-800 dark:text-slate-200">{viewStudent.age}</span>
+                </div>
+                <div>
+                  <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Gender</span>
+                  <span className="capitalize font-medium text-slate-800 dark:text-slate-200">{viewStudent.gender}</span>
+                </div>
+
+                <div className="col-span-2 pt-1">
+                  <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Address</span>
+                  <span className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg block border border-border/50 text-slate-800 dark:text-slate-200 leading-relaxed">
+                    {viewStudent.address}
+                  </span>
                 </div>
               </div>
 
-              <div className="col-span-2 pt-2">
-                <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Address</span>
-                <span className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg block border border-border/50">{viewStudent.address}</span>
+              {/* Actions */}
+              <div className="flex justify-end gap-3 pt-6 mt-4 border-t border-border/50">
+                <Button variant="ghost" onClick={() => setViewStudent(null)}>Close</Button>
+                <Button onClick={() => {
+                  setViewStudent(null);
+                  router.push(`/students/edit/${viewStudent.id}`);
+                }}>
+                  <FiEdit2 className="mr-2" size={16} /> Edit Student
+                </Button>
               </div>
-            </div>
-            <div className="flex justify-end pt-4 mt-2">
-              <Button onClick={() => setViewStudent(null)}>Close</Button>
             </div>
           </div>
         )}
