@@ -20,7 +20,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student createStudent(StudentDTO studentDTO) {
         Student student = Student.builder()
-                .studentId("STU-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase())
+                .studentId(studentDTO.getStudentId())
                 .fullName(studentDTO.getFullName())
                 .email(studentDTO.getEmail())
                 .phoneNumber(studentDTO.getPhoneNumber())
@@ -28,7 +28,7 @@ public class StudentServiceImpl implements StudentService {
                 .age(studentDTO.getAge())
                 .gender(studentDTO.getGender())
                 .address(studentDTO.getAddress())
-                .registrationDate(new Date())
+                .registrationDate(studentDTO.getRegistrationDate() != null ? studentDTO.getRegistrationDate() : new Date())
                 .build();
         return studentRepository.save(student);
     }
@@ -48,6 +48,7 @@ public class StudentServiceImpl implements StudentService {
     public Student updateStudent(String id, StudentDTO studentDTO) {
         Student existingStudent = getStudentById(id);
         
+        existingStudent.setStudentId(studentDTO.getStudentId());
         existingStudent.setFullName(studentDTO.getFullName());
         existingStudent.setEmail(studentDTO.getEmail());
         existingStudent.setPhoneNumber(studentDTO.getPhoneNumber());
@@ -55,6 +56,10 @@ public class StudentServiceImpl implements StudentService {
         existingStudent.setAge(studentDTO.getAge());
         existingStudent.setGender(studentDTO.getGender());
         existingStudent.setAddress(studentDTO.getAddress());
+        
+        if (studentDTO.getRegistrationDate() != null) {
+            existingStudent.setRegistrationDate(studentDTO.getRegistrationDate());
+        }
 
         return studentRepository.save(existingStudent);
     }

@@ -2,9 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { FiGrid, FiUsers, FiSettings, FiBarChart2 } from 'react-icons/fi';
-import { APP_NAME } from '@/lib/constants';
+import { usePathname, useRouter } from 'next/navigation';
+import { FiGrid, FiUsers, FiLogOut } from 'react-icons/fi';
+import { APP_NAME, JWT_STORAGE_KEY } from '@/lib/constants';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -12,12 +12,11 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const pathname = usePathname();
+  const router = useRouter();
   
   const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: <FiGrid size={20} /> },
     { name: 'Students', href: '/students', icon: <FiUsers size={20} /> },
-    { name: 'Analytics', href: '#', icon: <FiBarChart2 size={20} /> },
-    { name: 'Settings', href: '#', icon: <FiSettings size={20} /> },
   ];
 
   return (
@@ -60,13 +59,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
       </div>
       
       <div className="absolute bottom-8 left-4 right-4">
-        <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-secondary/10 border border-primary/20">
-          <h4 className="text-sm font-semibold mb-1">Need help?</h4>
-          <p className="text-xs text-slate-500 mb-3">Check out our documentation for more info.</p>
-          <button className="w-full text-xs font-semibold py-2 bg-white dark:bg-slate-800 rounded-lg shadow-sm">
-            Documentation
-          </button>
-        </div>
+        <button 
+          onClick={() => {
+            localStorage.removeItem(JWT_STORAGE_KEY);
+            router.push('/login');
+          }}
+          className="w-full flex items-center justify-center gap-2 text-sm font-semibold py-3 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-xl transition-colors"
+        >
+          <FiLogOut size={18} />
+          Logout
+        </button>
       </div>
     </aside>
   );

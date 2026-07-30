@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
 const studentSchema = z.object({
+  studentId: z.string().min(1, 'Student ID is required'),
   fullName: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Invalid email address'),
   phoneNumber: z.string().min(10, 'Phone number must be at least 10 digits'),
@@ -19,6 +20,7 @@ const studentSchema = z.object({
   age: z.coerce.number().min(16, 'Age must be at least 16').max(100, 'Invalid age'),
   gender: z.string().min(1, 'Gender is required'),
   address: z.string().min(5, 'Address is required'),
+  registrationDate: z.string().min(1, 'Registration date is required'),
 });
 
 interface StudentFormProps {
@@ -34,10 +36,12 @@ export const StudentForm: React.FC<StudentFormProps> = ({ initialData, isEditMod
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isValid, isDirty },
   } = useForm<StudentFormData>({
     resolver: zodResolver(studentSchema),
+    mode: 'onChange',
     defaultValues: initialData || {
+      studentId: '',
       fullName: '',
       email: '',
       phoneNumber: '',
@@ -45,12 +49,18 @@ export const StudentForm: React.FC<StudentFormProps> = ({ initialData, isEditMod
       age: 18,
       gender: '',
       address: '',
+      registrationDate: new Date().toISOString().split('T')[0],
     },
   });
 
   useEffect(() => {
     if (initialData) {
-      reset(initialData);
+      reset({
+        ...initialData,
+        registrationDate: initialData.registrationDate 
+          ? new Date(initialData.registrationDate).toISOString().split('T')[0]
+          : new Date().toISOString().split('T')[0]
+      });
     }
   }, [initialData, reset]);
 
@@ -76,6 +86,13 @@ export const StudentForm: React.FC<StudentFormProps> = ({ initialData, isEditMod
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Input
+          label="Student ID"
+          placeholder="e.g. STU-12345"
+          {...register('studentId')}
+          error={errors.studentId?.message}
+        />
+        
+        <Input
           label="Full Name"
           placeholder="e.g. John Doe"
           {...register('fullName')}
@@ -97,12 +114,25 @@ export const StudentForm: React.FC<StudentFormProps> = ({ initialData, isEditMod
           error={errors.phoneNumber?.message}
         />
         
-        <Input
-          label="Course"
-          placeholder="e.g. Computer Science"
-          {...register('course')}
-          error={errors.course?.message}
-        />
+        <div className="w-full flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">
+            Course
+          </label>
+          <select 
+            className={`premium-input ${errors.course ? 'border-red-500' : ''}`}
+            {...register('course')}
+          >
+            <option value="">Select Course</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Software Engineering">Software Engineering</option>
+            <option value="Information Technology">Information Technology</option>
+            <option value="Data Science">Data Science</option>
+            <option value="Business Administration">Business Administration</option>
+          </select>
+          {errors.course && (
+            <span className="text-sm text-red-500 ml-1">{errors.course.message}</span>
+          )}
+        </div>
         
         <Input
           label="Age"
@@ -130,12 +160,18 @@ export const StudentForm: React.FC<StudentFormProps> = ({ initialData, isEditMod
           )}
         </div>
         
-        <div className="md:col-span-2">
+        <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input
             label="Address"
             placeholder="e.g. 123 Main St, City"
             {...register('address')}
             error={errors.address?.message}
+          />
+          <Input
+            label="Registration Date"
+            type="date"
+            {...register('registrationDate')}
+            error={errors.registrationDate?.message}
           />
         </div>
       </div>
@@ -149,7 +185,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({ initialData, isEditMod
         >
           Cancel
         </Button>
-        <Button type="submit" isLoading={isLoading}>
+        <Button type="submit" isLoading={isLoading} disabled={!isValid || isLoading}>
           {isEditMode ? 'Save Changes' : 'Add Student'}
         </Button>
       </div>

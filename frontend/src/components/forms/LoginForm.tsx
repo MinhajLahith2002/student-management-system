@@ -14,6 +14,7 @@ import { toast } from 'react-toastify';
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
+  rememberMe: z.boolean().optional(),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -35,7 +36,7 @@ export const LoginForm = () => {
     try {
       const response = await authService.login(data);
       toast.success('Login successful!');
-      login(response.token);
+      login(response.token, data.rememberMe);
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
@@ -69,19 +70,13 @@ export const LoginForm = () => {
         <div className="flex items-center">
           <input
             id="remember-me"
-            name="remember-me"
             type="checkbox"
             className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+            {...register('rememberMe')}
           />
           <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-700 dark:text-slate-300">
             Remember me
           </label>
-        </div>
-
-        <div className="text-sm">
-          <a href="#" className="font-medium text-primary hover:text-primary-hover">
-            Forgot your password?
-          </a>
         </div>
       </div>
 

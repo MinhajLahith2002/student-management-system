@@ -12,6 +12,7 @@ export interface Student {
 }
 
 export interface StudentFormData {
+  studentId: string;
   fullName: string;
   email: string;
   phoneNumber: string;
@@ -19,4 +20,5 @@ export interface StudentFormData {
   age: number;
   gender: string;
   address: string;
+  registrationDate?: string;
 }

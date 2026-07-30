@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, use } from 'react';
 import { Card } from '@/components/ui/Card';
 import { StudentForm } from '@/components/forms/StudentForm';
 import { studentService } from '@/services/studentService';
@@ -9,14 +9,15 @@ import { FiArrowLeft } from 'react-icons/fi';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 
-export default function EditStudentPage({ params }: { params: { id: string } }) {
+export default function EditStudentPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params);
   const [student, setStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const data = await studentService.getStudentById(params.id);
+        const data = await studentService.getStudentById(resolvedParams.id);
         setStudent(data);
       } catch (error) {
         toast.error('Failed to load student details');
@@ -26,7 +27,7 @@ export default function EditStudentPage({ params }: { params: { id: string } }) 
     };
 
     fetchStudent();
-  }, [params.id]);
+  }, [resolvedParams.id]);
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
