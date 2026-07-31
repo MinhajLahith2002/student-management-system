@@ -88,6 +88,33 @@ export default function DashboardPage() {
         </form>
       </div>
 
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Link href="/students/add" className="block">
+          <Card className="p-5 flex items-center gap-4 hover:border-primary/50 transition-all cursor-pointer group hover:-translate-y-1 bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
+              <FiUserPlus size={20} />
+            </div>
+            <div>
+              <h4 className="font-semibold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Add New Student</h4>
+              <p className="text-xs text-slate-500 mt-0.5">Register a new enrollment</p>
+            </div>
+          </Card>
+        </Link>
+        
+        <Link href="/students" className="block">
+          <Card className="p-5 flex items-center gap-4 hover:border-primary/50 transition-all cursor-pointer group hover:-translate-y-1 bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800">
+            <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
+              <FiUsers size={20} />
+            </div>
+            <div>
+              <h4 className="font-semibold text-slate-900 dark:text-white group-hover:text-primary transition-colors">View Directory</h4>
+              <p className="text-xs text-slate-500 mt-0.5">Browse all student records</p>
+            </div>
+          </Card>
+        </Link>
+      </div>
+
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="p-5 flex items-center gap-4 hover:border-primary/30 transition-colors">
@@ -203,8 +230,8 @@ export default function DashboardPage() {
       </div>
 
       {/* Enhanced Recent Activity Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 p-0 overflow-hidden">
+      <div className="grid grid-cols-1 gap-6">
+        <Card className="p-0 overflow-hidden">
           <div className="p-5 border-b border-border flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/10">
             <h2 className="text-base font-bold text-slate-800 dark:text-slate-200">Recent Registrations</h2>
             <Link href="/students" className="text-sm text-primary font-medium hover:underline flex items-center gap-1">
@@ -248,35 +275,6 @@ export default function DashboardPage() {
             )}
           </div>
         </Card>
-
-        {/* Quick Actions (Moved from Top) */}
-        <div className="flex flex-col gap-4">
-          <h3 className="text-base font-bold text-slate-800 dark:text-slate-200 px-1">Quick Actions</h3>
-          
-          <Link href="/students/add" className="block">
-            <Card className="p-5 flex items-center gap-4 hover:border-primary/50 transition-all cursor-pointer group hover:-translate-y-1 bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
-                <FiUserPlus size={20} />
-              </div>
-              <div>
-                <h4 className="font-semibold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Add New Student</h4>
-                <p className="text-xs text-slate-500 mt-0.5">Register a new enrollment</p>
-              </div>
-            </Card>
-          </Link>
-          
-          <Link href="/students" className="block">
-            <Card className="p-5 flex items-center gap-4 hover:border-primary/50 transition-all cursor-pointer group hover:-translate-y-1 bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800">
-              <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
-                <FiUsers size={20} />
-              </div>
-              <div>
-                <h4 className="font-semibold text-slate-900 dark:text-white group-hover:text-primary transition-colors">View Directory</h4>
-                <p className="text-xs text-slate-500 mt-0.5">Browse all student records</p>
-              </div>
-            </Card>
-          </Link>
-        </div>
       </div>
     </div>
   );

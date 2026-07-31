@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -17,10 +16,25 @@ public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
 
+    private String generateCoursePrefix(String courseName) {
+        if (courseName == null || courseName.trim().isEmpty()) {
+            return "STU";
+        }
+        String[] words = courseName.trim().split("\\s+");
+        StringBuilder prefix = new StringBuilder();
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                prefix.append(word.toUpperCase().charAt(0));
+            }
+        }
+        return prefix.toString();
+    }
+
     @Override
     public Student createStudent(StudentDTO studentDTO) {
+        String prefix = generateCoursePrefix(studentDTO.getCourse());
         Student student = Student.builder()
-                .studentId("STU-" + java.util.UUID.randomUUID().toString().substring(0, 6).toUpperCase())
+                .studentId(prefix + "-" + java.util.UUID.randomUUID().toString().substring(0, 6).toUpperCase())
                 .fullName(studentDTO.getFullName())
                 .email(studentDTO.getEmail())
                 .phoneNumber(studentDTO.getPhoneNumber())

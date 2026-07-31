@@ -15,7 +15,9 @@ import { FiUser, FiMail, FiPhone, FiMapPin, FiBook, FiCalendar, FiUsers } from '
 const studentSchema = z.object({
   fullName: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Invalid email address'),
-  phoneNumber: z.string().min(10, 'Phone number must be at least 10 digits'),
+  phoneNumber: z.string()
+    .length(10, 'Phone number must be exactly 10 digits')
+    .regex(/^0\d{9}$/, 'Must be a valid Sri Lankan phone number (e.g., 0771234567)'),
   course: z.string().min(2, 'Course is required'),
   age: z.number().min(16, 'Age must be at least 16').max(100, 'Invalid age'),
   gender: z.string().min(1, 'Gender is required'),
@@ -150,7 +152,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({ initialData, isEditMod
           />
           <Input
             label="Phone Number"
-            placeholder="e.g. 1234567890"
+            placeholder="e.g. 0771234567"
             icon={<FiPhone size={18} />}
             {...register('phoneNumber')}
             error={errors.phoneNumber?.message}
