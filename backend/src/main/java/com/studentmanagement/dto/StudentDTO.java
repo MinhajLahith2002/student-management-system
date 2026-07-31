@@ -9,9 +9,6 @@ import java.util.Date;
 @Data
 public class StudentDTO {
 
-    @NotBlank(message = "Student ID is required")
-    private String studentId;
-
     @NotBlank(message = "Full name is required")
     private String fullName;
 

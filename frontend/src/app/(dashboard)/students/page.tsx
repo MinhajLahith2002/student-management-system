@@ -6,10 +6,13 @@ import { StudentTable } from '@/components/tables/StudentTable';
 import { useStudents } from '@/hooks/useStudents';
 import { FiSearch, FiFilter, FiDownload, FiPlus, FiArrowLeft } from 'react-icons/fi';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function StudentsPage() {
-  const { students, loading, deleteStudent } = useStudents();
-  const [searchTerm, setSearchTerm] = useState('');
+function StudentsDirectory() {
+  const { students, loading, deleteStudent, bulkDeleteStudents } = useStudents();
+  const searchParams = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const [selectedCourse, setSelectedCourse] = useState('');
   const [showFilters, setShowFilters] = useState(false);
 
@@ -142,8 +145,17 @@ export default function StudentsPage() {
           students={filteredStudents} 
           isLoading={loading && students.length === 0} 
           onDelete={deleteStudent}
+          onBulkDelete={bulkDeleteStudents}
         />
       </Card>
     </div>
+  );
+}
+
+export default function StudentsPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-slate-500">Loading directory...</div>}>
+      <StudentsDirectory />
+    </Suspense>
   );
 }
